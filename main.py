@@ -57,6 +57,11 @@ class Planet():
         self.e = e  # Excentricidade
         self.dist = dist
         self.star = star
+        self.tick_planeta = 0
+
+        self.c = self.e * self.a * ESCALA_DIST # Calcula distância do centro ao foco em escala
+        self.vp = math.sqrt(GM_Sol*((1+self.e)/(self.a*(1-self.e)))) # Calcula velocidade no períelio
+        self.rp = self.a*(1-self.e) # Calcula distância do planeta ao periélio
 
         self.x_planeta = x_centro + self.a * ESCALA_DIST
         self.y_planta = y_centro
@@ -95,9 +100,6 @@ class Planet():
 
         a_esc = self.a * ESCALA_DIST
         b_esc = self.b * ESCALA_DIST
-        self.c = self.e * self.a * ESCALA_DIST # Calcula distância do centro ao foco em escala
-        self.vp = math.sqrt(GM_Sol*((1+self.e)/(self.a*(1-self.e)))) # Calcula velocidade no períelio
-        self.rp = self.a*(1-self.e) # Calcula distância do planeta ao periélio
         
         self.renderEllipticalOrbit(a_esc,b_esc)
 
@@ -105,8 +107,22 @@ class Planet():
         self.v = math.sqrt(GM_Sol*((2/r)-(1/self.a))) # Calcula a velocidade para uma órbita elíptica
         self.v = 3600 * self.v # Coloca a velocidade em Km/h
         
-        X = int(math.cos(math.radians(angulo)) * a_esc) + x_centro
-        Y = int(math.sin(math.radians(angulo)) * b_esc) + y_centro
+        # Calcula a distância do corpo ao foco em escala de pixels
+        distance_to_focus = math.sqrt((self.x_planeta - (LARGURA_JANELA // 2 + self.c)) ** 2 + (self.y_planta - ALTURA_JANELA // 2) ** 2) 
+
+        if distance_to_focus > self.rp * ESCALA_DIST:
+            self.speed = self.vp * (self.c / distance_to_focus)
+        else:
+            self.speed = self.vp
+
+        
+        self.speed *= 0.05
+        
+        self.tick_planeta = (angulo + self.speed * math.radians(1)) 
+        
+
+        X = int(math.cos(math.radians(self.tick_planeta)) * a_esc) + x_centro
+        Y = int(math.sin(math.radians(self.tick_planeta)) * b_esc) + y_centro
         
         if len(self.pos) < self.K:
             self.AREA_PERC += calcArea(self.x_planeta, self.y_planta, X, Y)
@@ -117,18 +133,10 @@ class Planet():
         self.x_planeta = X
         self.y_planta = Y
 
-        if r > self.rp:
-            if r < self.c:
-                self.speed = self.vp * (self.c / r)
-            else:
-                self.speed = self.vp * (self.c / r)
-        else:
-            self.speed = self.vp
-
         if area:
             self.renderLineArea()
         if esc:
-            self.renderVelocity(angulo, a_esc, b_esc)
+            self.renderVelocity(self.tick_planeta, a_esc, b_esc)
         if line:
             pygame.draw.line(janela, BRANCO, (self.star.x, self.star.y), (self.x_planeta, self.y_planta))
         self.renderPlanet()
@@ -218,7 +226,6 @@ def PRIMEIRA_LEI():
     Terra = Planet("terra", (20, 20), 1.2*UA, 0.9978 * UA, 0.555,1.00 * UA, Sol)
 
     theta = 0
-    theta_increment = math.radians(1) # Incremento angular
     pygame.display.set_caption("Primeira Lei de Kepler - Lei das Órbitas")
 
     while True:
@@ -244,7 +251,7 @@ def PRIMEIRA_LEI():
         Terra.mov_eliptico(theta,True)
         Sol.renderStar()
         
-        theta += Terra.speed * theta_increment
+        theta += 1
 
         for event in pygame.event.get():
              

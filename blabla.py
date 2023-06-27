@@ -57,10 +57,8 @@ def game_loop():
 
         # Calcula a velocidade proporcional à distância
         if distance_to_focus > min_distance:
-            if distance_to_focus < focus_distance:
-                speed = periapsis_speed * (focus_distance / distance_to_focus)
-            else:
-                speed = periapsis_speed * (focus_distance / distance_to_focus)
+
+            speed = periapsis_speed * (focus_distance / distance_to_focus)
         else:
             speed = periapsis_speed
 
