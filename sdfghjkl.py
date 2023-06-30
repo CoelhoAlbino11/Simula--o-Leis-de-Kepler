@@ -24,5 +24,3 @@ for i in range(len(numeros) + 1):
     a = np.roll(numeros,i)
     print(a)
 
-
-

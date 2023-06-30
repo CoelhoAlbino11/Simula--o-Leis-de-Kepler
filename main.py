@@ -107,22 +107,8 @@ class Planet():
         self.v = math.sqrt(GM_Sol*((2/r)-(1/self.a))) # Calcula a velocidade para uma órbita elíptica
         self.v = 3600 * self.v # Coloca a velocidade em Km/h
         
-        # Calcula a distância do corpo ao foco em escala de pixels
-        distance_to_focus = math.sqrt((self.x_planeta - (LARGURA_JANELA // 2 + self.c)) ** 2 + (self.y_planta - ALTURA_JANELA // 2) ** 2) 
-
-        if distance_to_focus > self.rp * ESCALA_DIST:
-            self.speed = self.vp * (self.c / distance_to_focus)
-        else:
-            self.speed = self.vp
-
-        
-        self.speed *= 0.05
-        
-        self.tick_planeta = (angulo + self.speed * math.radians(1)) 
-        
-
-        X = int(math.cos(math.radians(self.tick_planeta)) * a_esc) + x_centro
-        Y = int(math.sin(math.radians(self.tick_planeta)) * b_esc) + y_centro
+        X = int(math.cos(math.radians(angulo)) * a_esc) + x_centro
+        Y = int(math.sin(math.radians(angulo)) * b_esc) + y_centro
         
         if len(self.pos) < self.K:
             self.AREA_PERC += calcArea(self.x_planeta, self.y_planta, X, Y)
@@ -136,7 +122,7 @@ class Planet():
         if area:
             self.renderLineArea()
         if esc:
-            self.renderVelocity(self.tick_planeta, a_esc, b_esc)
+            self.renderVelocity(angulo, a_esc, b_esc)
         if line:
             pygame.draw.line(janela, BRANCO, (self.star.x, self.star.y), (self.x_planeta, self.y_planta))
         self.renderPlanet()
@@ -270,7 +256,7 @@ def PRIMEIRA_LEI():
 
 def SEGUNDA_LEI():
     Sol = Star(x_centro+50, y_centro, GM_Sol, "imagens/sol2.png")
-    Terra = Planet("terra", (20, 20), 1.2*UA, 0.9978 * UA, 0.0167, 1.00 * UA, Sol)
+    Terra = Planet("terra", (20, 20), 1.2*UA, 0.9978 * UA, 0.5555, 1.00 * UA, Sol)
     
     theta = 0
     pygame.display.set_caption("Segunda Lei de Kepler - Leis das Áreas")
@@ -308,7 +294,7 @@ def SEGUNDA_LEI():
 
 def TERCEIRA_LEI():
 
-    Focus_Sun = 4.30
+    Focus_Sun = 4.30 # Distância do sol (localizado no foco) ao centro
     Sol = Star(x_centro + Focus_Sun, y_centro, GM_Sol, "imagens/sol2.png")
     # Instanciando os planetas
     Mercurio = Planet("mercurio", (12, 12), 0.38700 * UA, 0.37870 * UA, 0.2056, 0.39 * UA, Sol)
@@ -384,9 +370,9 @@ def MENU_PRINCIPAL():
         TEXTO_MENU = get_font(50).render("LEIS DE KEPLER", True, BRANCO)
         MENU_RECT = TEXTO_MENU.get_rect(center = (750,100))
 
-        BOTAO_PRIMEIRA_LEI = Button(imagem=pygame.image.load("botões/leiDasOrbitas.png"), pos= (750,250), escala= 5)
-        BOTAO_SEGUNDA_LEI = Button(imagem=pygame.image.load("botões/leiDasAreas.png"), pos= (750,400), escala= 5)
-        BOTAO_TERCEIRA_LEI = Button(imagem=pygame.image.load("botões/leiHarmonica.png"), pos= (750,550), escala= 5)
+        BOTAO_PRIMEIRA_LEI = Button(imagem=pygame.image.load("botões/leiDasOrbitas.png"), pos= (750,250), escala= 7)
+        BOTAO_SEGUNDA_LEI = Button(imagem=pygame.image.load("botões/leiDasAreas.png"), pos= (750,400), escala= 7)
+        BOTAO_TERCEIRA_LEI = Button(imagem=pygame.image.load("botões/leiHarmonica.png"), pos= (750,550), escala= 7)
 
         janela.blit(TEXTO_MENU, MENU_RECT)
 
