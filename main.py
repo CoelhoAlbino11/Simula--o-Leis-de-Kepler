@@ -14,8 +14,7 @@ y_centro = ALTURA_JANELA / 2
 
 # Cria uma janela
 janela = pygame.display.set_mode((LARGURA_JANELA, ALTURA_JANELA))
-pygame.display.set_caption("As leis de Kepler")
-clock = pygame.time.Clock()
+clock = pygame.time.Clock() # Define um tick
 
 # Define cores
 PRETO = (0, 0, 0)
@@ -29,7 +28,7 @@ ESCALA_DIST = 250 / UA  # 100 pixels = 1 UA
 GM_Sol = 1.334e20
 TEMPO_ESCALA = 24 * 3600
 
-# Define fonte
+# Define fonte e tamanho
 FONTE = pygame.font.Font("font.ttf", 9)
 
 ##
@@ -46,7 +45,7 @@ class Star():
         x_image = self.x - self.image.get_width() / 2
         y_image = self.y - self.image.get_height() / 2
         janela.blit(self.image, (x_image, y_image))
-StandarStar = Star(x_centro, y_centro, GM_Sol, "imagens/sol2.png") # O nosso sol :)
+StandarStar = Star(x_centro, y_centro, GM_Sol, "imagens/sol2.png") # Instanciando o Sol
 
 class Planet():
     def __init__(self, nome_planeta:str, escala:tuple, a:float, b:float, e:float, dist:float = 0, star:Star = StandarStar):
@@ -79,12 +78,12 @@ class Planet():
 
     def mov_circular(self, angulo:float) -> None:
 
-        r = self.dist * ESCALA_DIST
+        r = self.dist * ESCALA_DIST # Transforma a distância na escala da janela
         self.renderCircularOrbit(r)
 
         velocidade = math.sqrt(GM_Sol / r)
-        omega = velocidade / r
-        omega = omega / 10e6
+        omega = velocidade / r # Calcula velocidade angular
+        omega = omega / 10e6 
 
         self.x_planeta = int(r * math.cos(math.radians(angulo * omega))) + x_centro
         self.y_planta = int(r * math.sin(math.radians(angulo * omega))) + y_centro
@@ -221,7 +220,7 @@ def PRIMEIRA_LEI():
 
         PRIM_MOUSE_POS = pygame.mouse.get_pos()
 
-        BOTAO_VOLTAR = Button(imagem=pygame.image.load("botões/botaoSemEscrita.png"), pos= (1400,40), escala= 3)
+        BOTAO_VOLTAR = Button(imagem=pygame.image.load("botões/botaoVoltar.png"), pos= (1350,40), escala= 4)
         BOTAO_VOLTAR.atualiza()
 
         PERIELIO_TEXTO = get_font(30).render("Periélio", True, BRANCO)
@@ -268,7 +267,7 @@ def SEGUNDA_LEI():
 
         MOUSE_SEC_POS = pygame.mouse.get_pos()
 
-        BOTAO_VOLTAR = Button(imagem=pygame.image.load("botões/botaoSemEscrita.png"), pos= (1400,40), escala= 3)
+        BOTAO_VOLTAR = Button(imagem=pygame.image.load("botões/botaoVoltar.png"), pos= (1350,40), escala= 4)
         BOTAO_VOLTAR.atualiza()
 
         # Desenha o planeta Marte descrevendo um movimento elíptico
@@ -312,7 +311,7 @@ def TERCEIRA_LEI():
 
         TERC_MOUSE_POS = pygame.mouse.get_pos()
         
-        BOTAO_VOLTAR = Button(imagem=pygame.image.load("botões/botaoSemEscrita.png"), pos= (1400,40), escala= 3)
+        BOTAO_VOLTAR = Button(imagem=pygame.image.load("botões/botaoVoltar.png"), pos= (1350,40), escala= 4)
         BOTAO_VOLTAR.atualiza()
 
         # Desenha os planetas descrevendo movimento circular
@@ -367,12 +366,12 @@ def MENU_PRINCIPAL():
 
         MOUSE_MENU_POS = pygame.mouse.get_pos()
 
-        TEXTO_MENU = get_font(50).render("LEIS DE KEPLER", True, BRANCO)
+        TEXTO_MENU = get_font(65).render("LEIS DE KEPLER", True, BRANCO)
         MENU_RECT = TEXTO_MENU.get_rect(center = (750,100))
 
-        BOTAO_PRIMEIRA_LEI = Button(imagem=pygame.image.load("botões/leiDasOrbitas.png"), pos= (750,250), escala= 7)
-        BOTAO_SEGUNDA_LEI = Button(imagem=pygame.image.load("botões/leiDasAreas.png"), pos= (750,400), escala= 7)
-        BOTAO_TERCEIRA_LEI = Button(imagem=pygame.image.load("botões/leiHarmonica.png"), pos= (750,550), escala= 7)
+        BOTAO_PRIMEIRA_LEI = Button(imagem=pygame.image.load("botões/leiDasOrbitas.png"), pos= (750,350), escala= 6)
+        BOTAO_SEGUNDA_LEI = Button(imagem=pygame.image.load("botões/leiDasAreas.png"), pos= (750,500), escala= 6)
+        BOTAO_TERCEIRA_LEI = Button(imagem=pygame.image.load("botões/leiHarmonica.png"), pos= (750,650), escala= 6)
 
         janela.blit(TEXTO_MENU, MENU_RECT)
 
