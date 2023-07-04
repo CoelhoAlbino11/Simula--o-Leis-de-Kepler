@@ -67,7 +67,7 @@ class Planet():
         self.v = 0
 
         self.AREA_PERC = 0
-        self.K = 10 # quantida de subdivisões da órbita [2ª lei]
+        self.K = 12 # quantida de subdivisões da órbita [2ª lei]
         self.sec_A = (math.pi * self.a * self.b * (ESCALA_DIST)**2)/(self.K)
         self.pos = [[self.x_planeta,self.y_planta]]
 
@@ -198,7 +198,7 @@ class Button():
 ## Funções
 ##
 def calcArea(Xi,Yi,Xf,Yf) -> float:
-    return abs(-Yi*Xf + Xi*Yf + Yi*x_centro - Yf*x_centro - Xi*y_centro + Xf*y_centro)/2
+    return abs(-Yi*Xf + Xi*Yf + Yi*(x_centro+100) - Yf*(x_centro+100) - Xi*y_centro + Xf*y_centro)/2
 
 def get_font(tamanho):
     return pygame.font.Font("font.ttf", tamanho)
@@ -254,8 +254,8 @@ def PRIMEIRA_LEI():
         pygame.display.update()
 
 def SEGUNDA_LEI():
-    Sol = Star(x_centro+50, y_centro, GM_Sol, "imagens/sol2.png")
-    Terra = Planet("terra", (20, 20), 1.2*UA, 0.9978 * UA, 0.5555, 1.00 * UA, Sol)
+    Sol = Star(x_centro+150, y_centro, GM_Sol, "imagens/sol2.png")
+    Terra = Planet("terra", (20, 20), 1.5*UA, 0.9978 * UA, 0.555, 1.00 * UA, Sol)
     
     theta = 0
     pygame.display.set_caption("Segunda Lei de Kepler - Leis das Áreas")
