@@ -306,7 +306,7 @@ def calcArea(Xi,Yi,Xf,Yf) -> float:
         float: Área entre os pontos.
     """
 
-    return abs(-Yi*Xf + Xi*Yf + Yi*(x_centro+100) - Yf*(x_centro+100) - Xi*y_centro + Xf*y_centro)/2
+    return abs(-Yi*Xf + Xi*Yf + Yi*(x_centro+150) - Yf*(x_centro+150) - Xi*y_centro + Xf*y_centro)/2
 
 def get_font(tamanho):
     """
