@@ -35,20 +35,46 @@ FONTE = pygame.font.Font("font.ttf", 9)
 ## Classes
 ##
 class Star():
-    def __init__(self, x:float, y:float, GM:float, sprite:str):
-        self.x = x  # Center of mass
-        self.y = y  # Center of mass
+    def __init__(self, x: float, y: float, GM: float, sprite: str):
+        """
+        Inicializa uma instância da classe Star.
+
+        Args:
+            x (float): Coordenada x do centro de massa.
+            y (float): Coordenada y do centro de massa.
+            GM (float): Valor da constante GM.
+            sprite (str): Caminho para a imagem da estrela.
+        """
+        self.x = x  # Centro de massa
+        self.y = y  # Centro de massa
         self.GM = GM
         self.image = pygame.transform.smoothscale(pygame.image.load(sprite), (30, 30))
 
-    def renderStar(self): # Renderiza a imagem da propria estrela
-        x_image = self.x - self.image.get_width() / 2
-        y_image = self.y - self.image.get_height() / 2
-        janela.blit(self.image, (x_image, y_image))
+    def renderStar(self):
+        """
+        Renderiza a imagem da estrela na tela.
+        """
+        x_imagem = self.x - self.image.get_width() / 2
+        y_imagem = self.y - self.image.get_height() / 2
+        janela.blit(self.image, (x_imagem, y_imagem))
+
 StandarStar = Star(x_centro, y_centro, GM_Sol, "imagens/sol2.png") # Instanciando o Sol
 
 class Planet():
     def __init__(self, nome_planeta:str, escala:tuple, a:float, b:float, e:float, dist:float = 0, star:Star = StandarStar):
+        """
+        Inicializa uma instância da classe Planet.
+
+        Args:
+            nome_planeta (str): Nome do planeta.
+            escala (tuple): Escala do tamanho da imagem do planeta.
+            a (float): Semi-eixo maior [m].
+            b (float): Semi-eixo menor [m].
+            e (float): Excentricidade.
+            dist (float, optional): Distância. Defaults to 0.
+            star (Star, optional): Instância da classe Star. Defaults to StandardStar.
+        """
+        
         self.nome_planeta = nome_planeta  # Nome do Planeta
         self.escala = escala  # Escala tamanho da imagem do planeta
         self.a = a  # Semi eixo maior [m]
@@ -77,6 +103,12 @@ class Planet():
             self.escala)
 
     def mov_circular(self, angulo:float) -> None:
+        """
+        Move o planeta em uma órbita circular.
+
+        Args:
+            angulo (float): Ângulo.
+        """
 
         r = self.dist * ESCALA_DIST # Transforma a distância na escala da janela
         self.renderCircularOrbit(r)
@@ -96,6 +128,15 @@ class Planet():
         self.renderPlanet()
 
     def mov_eliptico(self, angulo:float, esc:bool = False, line:bool = False, area:bool = False) -> None:
+        """
+        Move o planeta em uma órbita elíptica.
+
+        Args:
+            angulo (float): Ângulo.
+            esc (bool, optional): Se True, renderiza a velocidade. Defaults to False.
+            line (bool, optional): Se True, renderiza uma linha entre a estrela e o planeta. Defaults to False.
+            area (bool, optional): Se True, renderiza a área. Defaults to False.
+        """
 
         a_esc = self.a * ESCALA_DIST
         b_esc = self.b * ESCALA_DIST
@@ -132,21 +173,56 @@ class Planet():
     #
     # Renderizações
     #
-    def renderPlanet(self) -> None: # Renderiza o proprio planeta
+    def renderPlanet(self) -> None:
+        """
+        Renderiza a imagem do próprio planeta.
+        """
+
         x_image = self.x_planeta - self.image.get_width() / 2
         y_image = self.y_planta - self.image.get_height() / 2
         janela.blit(self.image, (x_image, y_image))
 
     def renderLineStarPlanet(self,x_planet,y_planet) -> None:
+        """
+        Renderiza uma linha entre a estrela e o planeta.
+
+        Args:
+            x_planet: Coordenada x do planeta.
+            y_planet: Coordenada y do planeta.
+        """
+
         pygame.draw.line(janela,BRANCO,(self.star.x,self.star.y),(x_planet,y_planet))
     
-    def renderCircularOrbit(self, r:int) -> None: # Renderiza uma orbita circular de raio "r"
+    def renderCircularOrbit(self, r:int) -> None:
+        """
+        Renderiza uma órbita circular de raio "r".
+
+        Args:
+            r (int): Raio da órbita.
+        """
+
         pygame.draw.circle(janela, BRANCO, (x_centro,y_centro), r, 1)
 
-    def renderEllipticalOrbit(self,a_esc:float,b_esc:float) -> None: # Renderiza uma órbita elíptica com semi-eixo maior = a_esc e semi-eixo menor = b_esc
+    def renderEllipticalOrbit(self,a_esc:float,b_esc:float) -> None:
+        """
+        Renderiza uma órbita elíptica.
+
+        Args:
+            a_esc (float): Semi-eixo maior escalado.
+            b_esc (float): Semi-eixo menor escalado.
+        """
         pygame.draw.ellipse(janela, BRANCO, (x_centro - a_esc, y_centro - b_esc, 2 * a_esc, 2 * b_esc), (1))
 
-    def renderVelocity(self, angulo:float, a_esc:float, b_esc:float) -> None: # Renderiza o vetor velocidade com o valor em cima do planeta
+    def renderVelocity(self, angulo:float, a_esc:float, b_esc:float) -> None:
+        """
+        Renderiza o vetor velocidade com o valor em cima do planeta.
+
+        Args:
+            angulo (float): Ângulo.
+            a_esc (float): Semi-eixo maior escalado.
+            b_esc (float): Semi-eixo menor escalado.
+        """
+
         v_texto = FONTE.render(f"{round(self.v,1)} km/h", 1, BRANCO)
         janela.blit(v_texto, (self.x_planeta + self.image.get_width(), self.y_planta + self.image.get_height()))
 
@@ -166,47 +242,99 @@ class Planet():
 
         pygame.draw.line(janela, VERMELHO, (vx, vy), (x_v_final, y_v_final), 2)
 
-    def renderLineArea(self) -> None: # Renderiza todas as subdivisões da orbita segundo a 2ª lei
+    def renderLineArea(self) -> None:
+        """
+        Renderiza todas as subdivisões da órbita segundo a 2ª lei.
+        """
+
         for linha in self.pos:
                 #print(self.K)
                 #print(len(self.pos))
                 pygame.draw.line(janela, (0,0,255),(self.star.x, self.star.y),(linha[0],linha[1]))
              
 class Button():
-	def __init__(self, imagem, pos, escala):
-        
-		self.imagem = pygame.transform.scale(imagem, (int(imagem.get_width()/2 * escala), int(imagem.get_height()/2 * escala)))
-		self.x_pos = pos[0]
-		self.y_pos = pos[1]
-		
-		self.rect = self.imagem.get_rect(center=(self.x_pos, self.y_pos))
+    def __init__(self, imagem, pos, escala):
+        """
+        Inicializa uma instância da classe Button.
 
-	def atualiza(self) -> None:
-		
-		if self.imagem is not None:
-			
-			janela.blit(self.imagem, self.rect)
-			
-	def checaEntrada(self, position) -> bool:
-		
-		if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
-			return True
-		
-		return False
+        Args:
+            imagem: Imagem do botão.
+            pos: Posição do botão.
+            escala: Escala do botão.
+        """
+        self.imagem = pygame.transform.scale(imagem, (int(imagem.get_width()/2 * escala), int(imagem.get_height()/2 * escala)))
+        self.x_pos = pos[0]
+        self.y_pos = pos[1]
+        self.rect = self.imagem.get_rect(center=(self.x_pos, self.y_pos))
+
+    def atualiza(self) -> None:
+        """
+        Atualiza a posição do botão na janela.
+        """
+        if self.imagem is not None:
+            janela.blit(self.imagem, self.rect)
+
+    def checaEntrada(self, position) -> bool:
+        """
+        Verifica se a posição fornecida está dentro dos limites do botão.
+
+        Args:
+            position: Posição a ser verificada.
+
+        Returns:
+            bool: True se a posição estiver dentro dos limites do botão, False caso contrário.
+        """
+        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+            return True
+
+        return False
 
 ##
 ## Funções
 ##
 def calcArea(Xi,Yi,Xf,Yf) -> float:
+    """
+    Calcula a área entre dois pontos em um plano cartesiano.
+
+    Args:
+        Xi (float): Coordenada x inicial.
+        Yi (float): Coordenada y inicial.
+        Xf (float): Coordenada x final.
+        Yf (float): Coordenada y final.
+
+    Returns:
+        float: Área entre os pontos.
+    """
+
     return abs(-Yi*Xf + Xi*Yf + Yi*(x_centro+100) - Yf*(x_centro+100) - Xi*y_centro + Xf*y_centro)/2
 
 def get_font(tamanho):
+    """
+    Obtém uma fonte com o tamanho especificado.
+
+    Args:
+        tamanho: Tamanho da fonte.
+
+    Returns:
+        pygame.font.Font: Fonte com o tamanho especificado.
+    """
     return pygame.font.Font("font.ttf", tamanho)
 
 ##
 ## Cenas
 ##
 def PRIMEIRA_LEI():
+    """
+    Executa a simulação da primeira lei de Kepler - Lei das Órbitas.
+
+    A função cria uma instância da classe Star para representar o Sol e uma instância da classe Planet para representar a Terra.
+    Em um loop contínuo, a função renderiza os elementos na janela e atualiza a posição do planeta Terra de acordo com a primeira lei de Kepler.
+    A função também permite voltar ao menu principal quando o botão "Voltar" é clicado.
+
+    Returns:
+        None
+    """
+
     Sol = Star(x_centro+50, y_centro, GM_Sol, "imagens/sol2.png")
     Terra = Planet("terra", (20, 20), 1.2*UA, 0.9978 * UA, 0.555,1.00 * UA, Sol)
 
@@ -254,6 +382,17 @@ def PRIMEIRA_LEI():
         pygame.display.update()
 
 def SEGUNDA_LEI():
+    """
+    Executa a simulação da segunda lei de Kepler - Lei das Áreas.
+
+    A função cria uma instância da classe Star para representar o Sol e uma instância da classe Planet para representar a Terra.
+    Em um loop contínuo, a função renderiza os elementos na janela e atualiza a posição do planeta Terra de acordo com a segunda lei de Kepler.
+    A função também permite voltar ao menu principal quando o botão "Voltar" é clicado.
+
+    Returns:
+        None
+    """
+
     Sol = Star(x_centro+150, y_centro, GM_Sol, "imagens/sol2.png")
     Terra = Planet("terra", (20, 20), 1.5*UA, 0.9978 * UA, 0.555, 1.00 * UA, Sol)
     
@@ -292,6 +431,16 @@ def SEGUNDA_LEI():
         pygame.display.update()
 
 def TERCEIRA_LEI():
+    """
+    Executa a simulação da terceira lei de Kepler - Lei Harmônica.
+
+    A função cria instâncias das classes Star e Planet para representar o Sol e os planetas do sistema solar.
+    Em um loop contínuo, a função renderiza os elementos na janela e atualiza as posições dos planetas de acordo com a terceira lei de Kepler.
+    A função também exibe os períodos de revolução dos planetas e permite voltar ao menu principal quando o botão "Voltar" é clicado.
+
+    Returns:
+        None
+    """
 
     Focus_Sun = 4.30 # Distância do sol (localizado no foco) ao centro
     Sol = Star(x_centro + Focus_Sun, y_centro, GM_Sol, "imagens/sol2.png")
@@ -358,6 +507,22 @@ def TERCEIRA_LEI():
         pygame.display.update()  # Atualiza a tela a cada laço rodado
 
 def MENU_PRINCIPAL():
+    """
+    Exibe o menu principal das Leis de Kepler.
+
+    A função exibe um menu com três opções relacionadas às Leis de Kepler: Lei das Órbitas, Lei das Áreas e Lei Harmônica.
+    O menu é exibido em uma janela pygame e os botões são representados por imagens.
+    O usuário pode clicar em um dos botões para selecionar uma das opções do menu.
+    Quando um botão é clicado, a função correspondente (PRIMEIRA_LEI, SEGUNDA_LEI ou TERCEIRA_LEI) é chamada.
+    A função continua em execução até que o usuário feche a janela do pygame.
+
+    Parâmetros:
+        Nenhum.
+
+    Retorno:
+        Nenhum.
+    """
+
     pygame.display.set_caption("As três leis de Kepler")
     while True:
 	    
