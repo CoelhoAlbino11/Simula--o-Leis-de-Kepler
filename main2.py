@@ -9,8 +9,8 @@ pygame.init()
 # Define dimensões da janela 
 LARGURA_JANELA = 1500
 ALTURA_JANELA = 800
-x_centro = LARGURA_JANELA / 2
-y_centro = ALTURA_JANELA / 2
+x_c = LARGURA_JANELA / 2
+y_c = ALTURA_JANELA / 2
 
 # Cria uma janela
 janela = pygame.display.set_mode((LARGURA_JANELA, ALTURA_JANELA))
@@ -25,9 +25,6 @@ Ms = 1.98847e30
 G = 1.9853516e-29
 GM = G*Ms
 UA = 1.496e11
-fator_escala = 250/UA # Escala
-
-r = np.zeros(4)
 
 def f(r):
     
@@ -44,6 +41,7 @@ def f(r):
 
 h = 1/1000
 r = [1,0,0,-1*np.pi]
+orbita = []
 
 while True:
 
@@ -62,13 +60,20 @@ while True:
     k3 = h * f(r + k2/2)
     k4 = h * f(r + k3)
 
-    r += + (1/6) * (k1 + 2*k2 + 2*k3 + k4)
+    r = r + (1/6) * (k1 + 2*k2 + 2*k3 + k4)
+    orbita.append(r)
 
-    pygame.draw.circle(janela,BRANCO,(r[0]*250 + LARGURA_JANELA/2,r[1]*250 + ALTURA_JANELA/2),4)
+    for j in range(len(orbita)-1):
+        pygame.draw.line(janela,BRANCO,
+            (x_c + orbita[j][0]*250, y_c + orbita[j][1]*250),
+            (x_c + orbita[j+1][0]*250, y_c + orbita[j+1][1]*250),2            
+        )
 
-    pygame.draw.circle(janela,BRANCO,(LARGURA_JANELA/2,ALTURA_JANELA/2),4)
+    pygame.draw.circle(janela,BRANCO,(r[0]*250 + x_c,r[1]*250 + y_c),4)
 
-    pygame.draw.line(janela,BRANCO,(LARGURA_JANELA/2,ALTURA_JANELA/2),(r[0]*250 + LARGURA_JANELA/2,r[1]*250 + ALTURA_JANELA/2))
+    pygame.draw.circle(janela,BRANCO,(x_c,y_c),4)
+
+    pygame.draw.line(janela,BRANCO,(x_c,y_c),(r[0]*250 + x_c,r[1]*250 + y_c))
 
     pygame.display.update()
 
